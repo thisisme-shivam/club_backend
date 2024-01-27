@@ -2,7 +2,8 @@ name: CICD
 
 on:
   push:
-    branches: [prod]
+    branches:
+      - prod
 
 jobs:
   build:
@@ -10,28 +11,34 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-        
+
       - name: Setup Java
         uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
           java-version: '11'
+
       - name: Build Project
         run: mvn clean install -DskipTests
-      - name: Login to docker hub
-        run: docker login -u ${{secrets.DOCKERUSERNAME}} -p ${{secrets.DOCKERPASSWORD}}
-      - name: Build docker image
+
+      - name: Login to Docker Hub
+        run: echo ${{ secrets.DOCKERPASSWORD }} | docker login -u ${{ secrets.DOCKERUSERNAME }} --password-stdin
+
+      - name: Build Docker image
         run: docker build -t thisismeshivam/application .
-      - name: Publish image to docker hub
+
+      - name: Publish image to Docker Hub
         run: docker push thisismeshivam/application:latest
 
   deploy:
     needs: build
     runs-on: self-hosted
     steps:
-      - name: Pull Image from docker hub
+      - name: Pull Image from Docker Hub
         run: docker pull thisismeshivam/application:latest
-      - name: Delete old container
-        run: docker rm -f club_container
-      - name: Run docker container
+
+      - name: Delete old container (if exists)
+        run: docker stop club_container || true && docker rm club_container || true
+
+      - name: Run Docker container
         run: docker run -d -p 8080:8080 --name club_container thisismeshivam/application
