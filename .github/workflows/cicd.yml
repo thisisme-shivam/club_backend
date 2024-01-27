@@ -6,10 +6,11 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: [aws-ec2]
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
+        
       - name: Setup Java
         uses: actions/setup-java@v2
         with:
