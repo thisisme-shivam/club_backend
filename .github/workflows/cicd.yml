@@ -8,6 +8,8 @@ jobs:
   build:
     runs-on: linux
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
       - name: Setup Java
         uses: actions/setup-java@v2
         with:
