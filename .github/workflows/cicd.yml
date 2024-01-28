@@ -12,8 +12,7 @@ jobs:
       - name: Start Docker service
         run: |
           sudo service docker start
-          sleep 5  # Give Docker service some time to start
-
+          
       - name: Checkout Repository
         uses: actions/checkout@v2
 
