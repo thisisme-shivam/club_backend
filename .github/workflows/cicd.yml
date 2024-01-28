@@ -41,7 +41,7 @@ jobs:
         run: sudo docker pull thisismeshivam/application:latest
 
       - name: Delete old container (if exists)
-        run: sudo docker stop club_container || true && docker rm club_container || true
+        run: sudo docker stop club_container || true && sudo docker rm club_container || true
 
       - name: Run Docker container
         run: sudo docker run -d -p 8080:8080 --name club_container thisismeshivam/application
