@@ -9,6 +9,11 @@ jobs:
   build:
     runs-on: self-hosted
     steps:
+      - name: Start Docker service
+        run: |
+          sudo service docker start
+          sleep 5  # Give Docker service some time to start
+
       - name: Checkout Repository
         uses: actions/checkout@v2
 
@@ -23,7 +28,6 @@ jobs:
 
       - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKERPASSWORD }}" | docker login -u "${{ secrets.DOCKERUSERNAME }}" --password-stdin
-
 
       - name: Build Docker image
         run: docker build -t thisismeshivam/application .
