@@ -25,23 +25,23 @@ jobs:
         run: mvn clean install -DskipTests
 
       - name: Login to Docker Hub
-        run: echo "${{ secrets.DOCKERPASSWORD }}" | docker login -u "${{ secrets.DOCKERUSERNAME }}" --password-stdin
+        run: echo "${{ secrets.DOCKERPASSWORD }}" | sudo docker login -u "${{ secrets.DOCKERUSERNAME }}" --password-stdin
 
       - name: Build Docker image
-        run: docker build -t thisismeshivam/application .
+        run: sudo docker build -t thisismeshivam/application .
 
       - name: Publish image to Docker Hub
-        run: docker push thisismeshivam/application:latest
+        run: sudo  docker push thisismeshivam/application:latest
 
   deploy:
     needs: build
     runs-on: self-hosted
     steps:
       - name: Pull Image from Docker Hub
-        run: docker pull thisismeshivam/application:latest
+        run: sudo docker pull thisismeshivam/application:latest
 
       - name: Delete old container (if exists)
-        run: docker stop club_container || true && docker rm club_container || true
+        run: sudo docker stop club_container || true && docker rm club_container || true
 
       - name: Run Docker container
-        run: docker run -d -p 8080:8080 --name club_container thisismeshivam/application
+        run: sudo docker run -d -p 8080:8080 --name club_container thisismeshivam/application
